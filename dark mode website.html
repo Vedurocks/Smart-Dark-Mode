@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedurocks Smart Dark-Mode Controller | Interactive Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 750: '#1e293b', 850: '#0f172a', 950: '#020617' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+        
+        /* Dark Mode Specific Overrides */
+        .dark body { background-color: #0f172a; color: #f1f5f9; }
+        .dark .bg-white { background-color: #1e293b !important; }
+        .dark .bg-slate-50 { background-color: #0f172a !important; }
+        .dark .bg-slate-100 { background-color: #1e293b !important; }
+        .dark .text-slate-900 { color: #f8fafc !important; }
+        .dark .text-slate-800 { color: #f1f5f9 !important; }
+        .dark .text-slate-600 { color: #cbd5e1 !important; }
+        .dark .text-slate-500 { color: #94a3b8 !important; }
+        .dark .border-slate-200 { border-color: #334155 !important; }
+        .dark .border-slate-100 { border-color: #1e293b !important; }
+    </style>
+    <!-- Chosen Palette: Slate-50/100 (Light) and Midnight Slate (Dark) with Violet-600 AI accents. -->
+    <!-- Application Structure Plan: 
+         The full report structure is maintained: Hero, Feature Grid (4 cards), Data Hub (2 charts), Workflow Visualizer (4 steps), and Roadmap.
+         A theme toggle has been integrated into the navigation bar to demonstrate the "Smart Dark Mode" functionality on the page itself.
+    -->
+    <!-- Visualization & Content Choices:
+         - Doughnut Chart: Site Categorization stats.
+         - Line Chart: AI accuracy trends.
+         - Interactive Steps: Workflow explanation.
+         - Feature Panels: Deep dive into the extension's core tech.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold mr-2">V</span>
+                        <span class="font-bold text-xl tracking-tight text-slate-900">Vedurocks <span class="text-violet-600">SmartController</span></span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="scrollToSection('features')" class="hidden md:block text-slate-500 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</button>
+                    <button id="theme-toggle" class="flex items-center space-x-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-full text-sm font-bold hover:bg-violet-600 hover:text-white hover:border-violet-600 transition-all shadow-sm">
+                        <i id="theme-icon" class="fas fa-moon"></i>
+                        <span id="theme-text">Enable Dark Mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        
+        <!-- Hero Section -->
+        <div class="bg-white border-b border-slate-200">
+            <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 pr-0 md:pr-12">
+                    <h1 class="text-4xl tracking-tight font-extrabold text-slate-900 sm:text-5xl md:text-6xl">
+                        <span class="block">Not just a toggle.</span>
+                        <span class="block text-violet-600">An Intelligent Agent.</span>
+                    </h1>
+                    <p class="mt-3 text-base text-slate-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                        Experience-first theming for the modern web. The Vedurocks extension analyzes the DOM, respects brand identity, and surgically applies dark mode only where it makes sense.
+                    </p>
+                    <div class="mt-8 flex gap-4">
+                        <button onclick="scrollToSection('features')" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 md:py-4 md:text-lg transition-colors shadow-lg">
+                            Explore Features
+                        </button>
+                        <button id="demo-trigger" class="inline-flex items-center justify-center px-8 py-3 border border-slate-300 text-base font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 md:py-4 md:text-lg transition-colors">
+                            <i class="fas fa-play mr-2"></i> Simulate AI Analysis
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-10 md:mt-0 relative">
+                    <div class="bg-slate-900 rounded-xl shadow-2xl p-6 h-80 relative overflow-hidden flex flex-col items-center justify-center text-center">
+                        <div id="ai-status-container" class="transition-all duration-500">
+                            <div class="relative w-24 h-24 mb-6 mx-auto flex items-center justify-center">
+                                <div id="ai-ring" class="absolute inset-0 border-4 border-violet-500 rounded-full opacity-25"></div>
+                                <div id="ai-core" class="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.5)] z-10">
+                                    <i class="fas fa-brain text-white text-2xl"></i>
+                                </div>
+                            </div>
+                            <h3 id="ai-status-text" class="text-white text-xl font-semibold">Ready to Scan</h3>
+                            <p id="ai-sub-text" class="text-slate-400 mt-2 text-sm">Waiting for target site...</p>
+                        </div>
+                        <div id="ai-results" class="hidden absolute inset-0 bg-slate-800 p-6 flex-col justify-between text-left">
+                            <div>
+                                <h4 class="text-violet-400 font-bold uppercase text-xs tracking-wider mb-2">Analysis Complete</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-white">Contrast Score</span>
+                                        <span class="text-green-400 font-mono">98%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-white">Layout Integrity</span>
+                                        <span class="text-blue-400 font-mono">Safe</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="reset-demo" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded text-sm transition">Reset Simulation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Features Grid -->
+        <div id="features" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-base text-violet-600 font-semibold tracking-wide uppercase">Core Capabilities</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                    Intelligent Features for a Better Web
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div class="feature-card p-6 bg-white rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:border-violet-400 transition-all duration-300" data-feature="analysis">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-md bg-violet-100 text-violet-600"><i class="fas fa-search-dollar"></i></div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-slate-900">1. AI-Powered Site Analysis</h3>
+                                <p class="mt-1 text-sm text-slate-500">Non-blocking background scanning sequence.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card p-6 bg-white rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:border-violet-400 transition-all duration-300" data-feature="state">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-md bg-blue-100 text-blue-600"><i class="fas fa-toggle-on"></i></div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-slate-900">2. Smart State Management</h3>
+                                <p class="mt-1 text-sm text-slate-500">Remember preferences per domain.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card p-6 bg-white rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:border-violet-400 transition-all duration-300" data-feature="surgical">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-md bg-pink-100 text-pink-600"><i class="fas fa-eraser"></i></div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-slate-900">3. Surgical Element Removal</h3>
+                                <p class="mt-1 text-sm text-slate-500">Remove specific banners manually.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card p-6 bg-white rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:border-violet-400 transition-all duration-300" data-feature="memory">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-md bg-amber-100 text-amber-600"><i class="fas fa-brain"></i></div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-slate-900">4. Behavioral Memory</h3>
+                                <p class="mt-1 text-sm text-slate-500">Builds a custom profile over time.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 flex flex-col min-h-[300px]">
+                    <div id="detail-content" class="flex-grow flex items-center justify-center text-slate-400">
+                        Select a feature to explore details.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Data Visualization -->
+        <div class="bg-slate-100 py-16 transition-colors">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4">Site Categorization Engine</h3>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4">Preference Accuracy</h3>
+                        <div class="chart-container">
+                            <canvas id="learningChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Workflow -->
+        <div id="workflow" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-slate-900 text-center mb-12">The "Thinking" Process</h2>
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button class="process-step px-6 py-3 rounded-full bg-violet-600 text-white font-medium shadow-md transition-all" data-step="1">1. Detection</button>
+                <button class="process-step px-6 py-3 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-step="2">2. Analysis</button>
+                <button class="process-step px-6 py-3 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-step="3">3. Execution</button>
+                <button class="process-step px-6 py-3 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-step="4">4. Persistence</button>
+            </div>
+            <div id="process-display" class="bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center min-h-[250px] flex flex-col items-center justify-center transition-opacity duration-300">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+
+        <!-- Section 5: Roadmap -->
+        <div id="roadmap" class="bg-slate-900 text-white py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 class="text-3xl font-extrabold text-center mb-12">Roadmap: AI-Native Engine</h3>
+                <div class="space-y-4">
+                    <div class="p-6 bg-slate-800 rounded-lg border-l-4 border-violet-500">
+                        <h4 class="text-xl font-bold">Auto-Fix Contrast (WCAG)</h4>
+                        <p class="mt-2 text-slate-400">Dynamic adjustment of text colors against dark backgrounds.</p>
+                    </div>
+                    <div class="p-6 bg-slate-800 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="text-xl font-bold">Layout Correction</h4>
+                        <p class="mt-2 text-slate-400">Identify "broken" inverted elements and restructure CSS.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
+            <p>© 2024 Vedurocks. Project Lead: <span class="text-violet-600 font-bold">Vedansh Jain</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Data Store
+        const featureContent = {
+            analysis: { title: "AI-Powered Site Analysis", icon: "fa-search-dollar", color: "text-violet-600", bg: "bg-violet-100", desc: "Runs for 8–20 seconds, scanning the DOM for variables and layout structures without blocking your interaction.", stat: "8-20s" },
+            state: { title: "Smart State Management", icon: "fa-toggle-on", color: "text-blue-600", bg: "bg-blue-100", desc: "Set a site to 'Always Dark' or 'Never Dark'. The extension queries the local database instantly upon URL detection.", stat: "100%" },
+            surgical: { title: "Surgical Element Removal", icon: "fa-eraser", color: "text-pink-600", bg: "bg-pink-100", desc: "Manually remove elements that disrupt the experience. The extension remembers these removals for future visits.", stat: "Custom" },
+            memory: { title: "Behavioral Memory", icon: "fa-brain", color: "text-amber-600", bg: "bg-amber-100", desc: "Tracks your manual adjustments to build a custom preference profile automatically.", stat: "AI" }
+        };
+
+        const processSteps = {
+            1: { title: "Step 1: Detection", icon: "fa-radar", text: "Identifies the site and checks for existing user preferences in milliseconds.", color: "text-violet-600", bg: "bg-violet-100" },
+            2: { title: "Step 2: Analysis", icon: "fa-microchip", text: "New sites trigger an AI scan for colors and contrast ratios.", color: "text-blue-600", bg: "bg-blue-100" },
+            3: { title: "Step 3: Execution", icon: "fa-paint-roller", text: "Applies intelligent inversion or custom styles based on the analysis.", color: "text-pink-600", bg: "bg-pink-100" },
+            4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
+        };
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            themeText.innerText = isDark ? 'Switch to Light Mode' : 'Enable Dark Mode';
+            updateCharts(isDark);
+        });
+
+        // Charts
+        let charts = {};
+        function initCharts() {
+            const ctx1 = document.getElementById('categoryChart').getContext('2d');
+            charts.cat = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Optimized', 'Never Dark', 'Manual', 'Standard'],
+                    datasets: [{
+                        data: [45, 15, 25, 15],
+                        backgroundColor: ['#8b5cf6', '#ef4444', '#f59e0b', '#cbd5e1'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctx2 = document.getElementById('learningChart').getContext('2d');
+            charts.learn = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
+                    datasets: [{
+                        label: 'Accuracy',
+                        data: [60, 68, 75, 82, 88, 94],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function updateCharts(isDark) {
+            const color = isDark ? '#f8fafc' : '#1e293b';
+            const grid = isDark ? '#334155' : '#f1f5f9';
+            [charts.cat, charts.learn].forEach(c => {
+                if(c.options.scales) {
+                    if(c.options.scales.x) c.options.scales.x.ticks.color = color;
+                    if(c.options.scales.y) {
+                        c.options.scales.y.ticks.color = color;
+                        c.options.scales.y.grid.color = grid;
+                    }
+                }
+                c.update();
+            });
+        }
+
+        // Interactivity
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => loadFeature(card.dataset.feature));
+        });
+
+        function loadFeature(key) {
+            const d = featureContent[key];
+            document.getElementById('detail-content').innerHTML = `
+                <div class="animate-fade-in text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start mb-4">
+                        <div class="p-3 rounded-full ${d.bg} ${d.color} mr-4"><i class="fas ${d.icon} text-2xl"></i></div>
+                        <h3 class="text-2xl font-bold dark:text-white">${d.title}</h3>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">${d.desc}</p>
+                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg flex justify-between border dark:border-slate-700">
+                        <span class="text-xs font-bold uppercase text-slate-400">Target</span>
+                        <span class="text-2xl font-bold ${d.color}">${d.stat}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.querySelectorAll('.process-step').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.process-step').forEach(b => b.classList.replace('bg-violet-600', 'bg-white'));
+                document.querySelectorAll('.process-step').forEach(b => b.classList.add('text-slate-600', 'border'));
+                btn.className = 'process-step px-6 py-3 rounded-full bg-violet-600 text-white font-medium shadow-md transition-all';
+                updateProcess(btn.dataset.step);
+            });
+        });
+
+        function updateProcess(step) {
+            const d = processSteps[step];
+            const el = document.getElementById('process-display');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerHTML = `
+                    <div class="mb-6 p-4 rounded-full ${d.bg} ${d.color} text-3xl"><i class="fas ${d.icon}"></i></div>
+                    <h3 class="text-2xl font-bold dark:text-white mb-4">${d.title}</h3>
+                    <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">${d.text}</p>
+                `;
+                el.style.opacity = 1;
+            }, 200);
+        }
+
+        document.getElementById('demo-trigger').addEventListener('click', () => {
+            const btn = document.getElementById('demo-trigger');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
+            setTimeout(() => {
+                document.getElementById('ai-status-container').classList.add('hidden');
+                document.getElementById('ai-results').classList.remove('hidden');
+                btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
+            }, 3000);
+        });
+
+        document.getElementById('reset-demo').addEventListener('click', () => {
+            document.getElementById('ai-results').classList.add('hidden');
+            document.getElementById('ai-status-container').classList.remove('hidden');
+        });
+
+        function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+        window.onload = () => {
+            initCharts();
+            loadFeature('analysis');
+            updateProcess(1);
+        };
+    </script>
+</body>
+</html>
