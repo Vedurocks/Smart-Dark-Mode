@@ -258,8 +258,24 @@
     </main>
 
     <footer class="bg-white border-t border-slate-200 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
-            <p>© 2024 Vedurocks. Project Lead: <span class="text-violet-600 font-bold">Vedansh Jain</span></p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-sm text-slate-500">© 2024 Vedurocks. Project Lead: <span class="text-violet-600 font-bold">Vedansh Jain</span></p>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-2 text-slate-600">
+                        <i class="fas fa-eye text-violet-500"></i>
+                        <span class="font-medium">Views: </span>
+                        <span id="viewCount" class="font-bold text-slate-800">1,248</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-slate-600">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <span class="font-medium">Likes: </span>
+                        <span id="likeCount" class="font-bold text-slate-800">89</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -277,6 +293,50 @@
             2: { title: "Step 2: Analysis", icon: "fa-microchip", text: "New sites trigger an AI scan for colors and contrast ratios.", color: "text-blue-600", bg: "bg-blue-100" },
             3: { title: "Step 3: Execution", icon: "fa-paint-roller", text: "Applies intelligent inversion or custom styles based on the analysis.", color: "text-pink-600", bg: "bg-pink-100" },
             4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
+        };
+
+        // View and Like Counter System
+        let viewCount = 1248;
+        let likeCount = 89;
+
+        function updateCounters() {
+            document.getElementById('viewCount').textContent = formatNumber(viewCount);
+            document.getElementById('likeCount').textContent = formatNumber(likeCount);
+        }
+
+        function formatNumber(num) {
+            return num.toLocaleString('en-US');
+        }
+
+        // Console Functions
+        window.v = function(value) {
+            if (typeof value === 'string' && value.startsWith('+')) {
+                const increment = parseInt(value.substring(1));
+                viewCount += increment;
+            } else if (typeof value === 'string' && value.startsWith('-')) {
+                const decrement = parseInt(value.substring(1));
+                viewCount -= decrement;
+            } else if (!isNaN(value)) {
+                viewCount = parseInt(value);
+            }
+            viewCount = Math.max(0, viewCount);
+            updateCounters();
+            return `Views updated to: ${viewCount}`;
+        };
+
+        window.l = function(value) {
+            if (typeof value === 'string' && value.startsWith('+')) {
+                const increment = parseInt(value.substring(1));
+                likeCount += increment;
+            } else if (typeof value === 'string' && value.startsWith('-')) {
+                const decrement = parseInt(value.substring(1));
+                likeCount -= decrement;
+            } else if (!isNaN(value)) {
+                likeCount = parseInt(value);
+            }
+            likeCount = Math.max(0, likeCount);
+            updateCounters();
+            return `Likes updated to: ${likeCount}`;
         };
 
         // Theme Toggle
@@ -407,6 +467,7 @@
             initCharts();
             loadFeature('analysis');
             updateProcess(1);
+            updateCounters();
         };
     </script>
 </body>
