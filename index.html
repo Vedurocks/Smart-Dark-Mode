@@ -280,195 +280,212 @@
     </footer>
 
     <script>
-        // Data Store
-        const featureContent = {
-            analysis: { title: "AI-Powered Site Analysis", icon: "fa-search-dollar", color: "text-violet-600", bg: "bg-violet-100", desc: "Runs for 8–20 seconds, scanning the DOM for variables and layout structures without blocking your interaction.", stat: "8-20s" },
-            state: { title: "Smart State Management", icon: "fa-toggle-on", color: "text-blue-600", bg: "bg-blue-100", desc: "Set a site to 'Always Dark' or 'Never Dark'. The extension queries the local database instantly upon URL detection.", stat: "100%" },
-            surgical: { title: "Surgical Element Removal", icon: "fa-eraser", color: "text-pink-600", bg: "bg-pink-100", desc: "Manually remove elements that disrupt the experience. The extension remembers these removals for future visits.", stat: "Custom" },
-            memory: { title: "Behavioral Memory", icon: "fa-brain", color: "text-amber-600", bg: "bg-amber-100", desc: "Tracks your manual adjustments to build a custom preference profile automatically.", stat: "AI" }
-        };
+    // Data Store
+    const featureContent = {
+        analysis: { title: "AI-Powered Site Analysis", icon: "fa-search-dollar", color: "text-violet-600", bg: "bg-violet-100", desc: "Runs for 8–20 seconds, scanning the DOM for variables and layout structures without blocking your interaction.", stat: "8-20s" },
+        state: { title: "Smart State Management", icon: "fa-toggle-on", color: "text-blue-600", bg: "bg-blue-100", desc: "Set a site to 'Always Dark' or 'Never Dark'. The extension queries the local database instantly upon URL detection.", stat: "100%" },
+        surgical: { title: "Surgical Element Removal", icon: "fa-eraser", color: "text-pink-600", bg: "bg-pink-100", desc: "Manually remove elements that disrupt the experience. The extension remembers these removals for future visits.", stat: "Custom" },
+        memory: { title: "Behavioral Memory", icon: "fa-brain", color: "text-amber-600", bg: "bg-amber-100", desc: "Tracks your manual adjustments to build a custom preference profile automatically.", stat: "AI" }
+    };
 
-        const processSteps = {
-            1: { title: "Step 1: Detection", icon: "fa-radar", text: "Identifies the site and checks for existing user preferences in milliseconds.", color: "text-violet-600", bg: "bg-violet-100" },
-            2: { title: "Step 2: Analysis", icon: "fa-microchip", text: "New sites trigger an AI scan for colors and contrast ratios.", color: "text-blue-600", bg: "bg-blue-100" },
-            3: { title: "Step 3: Execution", icon: "fa-paint-roller", text: "Applies intelligent inversion or custom styles based on the analysis.", color: "text-pink-600", bg: "bg-pink-100" },
-            4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
-        };
+    const processSteps = {
+        1: { title: "Step 1: Detection", icon: "fa-radar", text: "Identifies the site and checks for existing user preferences in milliseconds.", color: "text-violet-600", bg: "bg-violet-100" },
+        2: { title: "Step 2: Analysis", icon: "fa-microchip", text: "New sites trigger an AI scan for colors and contrast ratios.", color: "text-blue-600", bg: "bg-blue-100" },
+        3: { title: "Step 3: Execution", icon: "fa-paint-roller", text: "Applies intelligent inversion or custom styles based on the analysis.", color: "text-pink-600", bg: "bg-pink-100" },
+        4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
+    };
 
-        // View and Like Counter System
-        let viewCount = 1248;
-        let likeCount = 89;
+    // View and Like Counter System
+    let viewCount = 1248;
+    let likeCount = 89;
 
-        function updateCounters() {
-            document.getElementById('viewCount').textContent = formatNumber(viewCount);
-            document.getElementById('likeCount').textContent = formatNumber(likeCount);
-        }
+    function updateCounters() {
+        document.getElementById('viewCount').textContent = formatNumber(viewCount);
+        document.getElementById('likeCount').textContent = formatNumber(likeCount);
+    }
 
-        function formatNumber(num) {
-            return num.toLocaleString('en-US');
-        }
+    function formatNumber(num) {
+        return num.toLocaleString('en-US');
+    }
 
-        // Console Functions
-        window.v = function(value) {
-            if (typeof value === 'string' && value.startsWith('+')) {
+    // Console Functions with correct logic
+    window.v = function(value) {
+        if (typeof value === 'string') {
+            if (value.startsWith('+')) {
+                // Add views
                 const increment = parseInt(value.substring(1));
                 viewCount += increment;
-            } else if (typeof value === 'string' && value.startsWith('-')) {
+            } else if (value.startsWith('-')) {
+                // Subtract views
                 const decrement = parseInt(value.substring(1));
                 viewCount -= decrement;
-            } else if (!isNaN(value)) {
+            } else {
+                // Set to absolute value (e.g., "v(500)" sets to 500)
                 viewCount = parseInt(value);
             }
-            viewCount = Math.max(0, viewCount);
-            updateCounters();
-            return `Views updated to: ${viewCount}`;
-        };
+        } else if (!isNaN(value)) {
+            // If it's a number (not a string), set absolute value
+            viewCount = parseInt(value);
+        }
+        viewCount = Math.max(0, viewCount);
+        updateCounters();
+        return `Views updated to: ${viewCount}`;
+    };
 
-        window.l = function(value) {
-            if (typeof value === 'string' && value.startsWith('+')) {
+    window.l = function(value) {
+        if (typeof value === 'string') {
+            if (value.startsWith('+')) {
+                // Add likes
                 const increment = parseInt(value.substring(1));
                 likeCount += increment;
-            } else if (typeof value === 'string' && value.startsWith('-')) {
+            } else if (value.startsWith('-')) {
+                // Subtract likes
                 const decrement = parseInt(value.substring(1));
                 likeCount -= decrement;
-            } else if (!isNaN(value)) {
+            } else {
+                // Set to absolute value (e.g., "l(100)" sets to 100)
                 likeCount = parseInt(value);
             }
-            likeCount = Math.max(0, likeCount);
-            updateCounters();
-            return `Likes updated to: ${likeCount}`;
-        };
+        } else if (!isNaN(value)) {
+            // If it's a number (not a string), set absolute value
+            likeCount = parseInt(value);
+        }
+        likeCount = Math.max(0, likeCount);
+        updateCounters();
+        return `Likes updated to: ${likeCount}`;
+    };
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const themeText = document.getElementById('theme-text');
-        
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-            themeText.innerText = isDark ? 'Switch to Light Mode' : 'Enable Dark Mode';
-            updateCharts(isDark);
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+    
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        themeText.innerText = isDark ? 'Switch to Light Mode' : 'Enable Dark Mode';
+        updateCharts(isDark);
+    });
+
+    // Charts
+    let charts = {};
+    function initCharts() {
+        const ctx1 = document.getElementById('categoryChart').getContext('2d');
+        charts.cat = new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: ['Optimized', 'Never Dark', 'Manual', 'Standard'],
+                datasets: [{
+                    data: [45, 15, 25, 15],
+                    backgroundColor: ['#8b5cf6', '#ef4444', '#f59e0b', '#cbd5e1'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // Charts
-        let charts = {};
-        function initCharts() {
-            const ctx1 = document.getElementById('categoryChart').getContext('2d');
-            charts.cat = new Chart(ctx1, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Optimized', 'Never Dark', 'Manual', 'Standard'],
-                    datasets: [{
-                        data: [45, 15, 25, 15],
-                        backgroundColor: ['#8b5cf6', '#ef4444', '#f59e0b', '#cbd5e1'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+        const ctx2 = document.getElementById('learningChart').getContext('2d');
+        charts.learn = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
+                datasets: [{
+                    label: 'Accuracy',
+                    data: [60, 68, 75, 82, 88, 94],
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
 
-            const ctx2 = document.getElementById('learningChart').getContext('2d');
-            charts.learn = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
-                    datasets: [{
-                        label: 'Accuracy',
-                        data: [60, 68, 75, 82, 88, 94],
-                        borderColor: '#8b5cf6',
-                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function updateCharts(isDark) {
-            const color = isDark ? '#f8fafc' : '#1e293b';
-            const grid = isDark ? '#334155' : '#f1f5f9';
-            [charts.cat, charts.learn].forEach(c => {
-                if(c.options.scales) {
-                    if(c.options.scales.x) c.options.scales.x.ticks.color = color;
-                    if(c.options.scales.y) {
-                        c.options.scales.y.ticks.color = color;
-                        c.options.scales.y.grid.color = grid;
-                    }
+    function updateCharts(isDark) {
+        const color = isDark ? '#f8fafc' : '#1e293b';
+        const grid = isDark ? '#334155' : '#f1f5f9';
+        [charts.cat, charts.learn].forEach(c => {
+            if(c.options.scales) {
+                if(c.options.scales.x) c.options.scales.x.ticks.color = color;
+                if(c.options.scales.y) {
+                    c.options.scales.y.ticks.color = color;
+                    c.options.scales.y.grid.color = grid;
                 }
-                c.update();
-            });
-        }
-
-        // Interactivity
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('click', () => loadFeature(card.dataset.feature));
+            }
+            c.update();
         });
+    }
 
-        function loadFeature(key) {
-            const d = featureContent[key];
-            document.getElementById('detail-content').innerHTML = `
-                <div class="animate-fade-in text-center md:text-left">
-                    <div class="flex items-center justify-center md:justify-start mb-4">
-                        <div class="p-3 rounded-full ${d.bg} ${d.color} mr-4"><i class="fas ${d.icon} text-2xl"></i></div>
-                        <h3 class="text-2xl font-bold dark:text-white">${d.title}</h3>
-                    </div>
-                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">${d.desc}</p>
-                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg flex justify-between border dark:border-slate-700">
-                        <span class="text-xs font-bold uppercase text-slate-400">Target</span>
-                        <span class="text-2xl font-bold ${d.color}">${d.stat}</span>
-                    </div>
+    // Interactivity
+    document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('click', () => loadFeature(card.dataset.feature));
+    });
+
+    function loadFeature(key) {
+        const d = featureContent[key];
+        document.getElementById('detail-content').innerHTML = `
+            <div class="animate-fade-in text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start mb-4">
+                    <div class="p-3 rounded-full ${d.bg} ${d.color} mr-4"><i class="fas ${d.icon} text-2xl"></i></div>
+                    <h3 class="text-2xl font-bold dark:text-white">${d.title}</h3>
                 </div>
+                <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">${d.desc}</p>
+                <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg flex justify-between border dark:border-slate-700">
+                    <span class="text-xs font-bold uppercase text-slate-400">Target</span>
+                    <span class="text-2xl font-bold ${d.color}">${d.stat}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    document.querySelectorAll('.process-step').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.process-step').forEach(b => b.classList.replace('bg-violet-600', 'bg-white'));
+            document.querySelectorAll('.process-step').forEach(b => b.classList.add('text-slate-600', 'border'));
+            btn.className = 'process-step px-6 py-3 rounded-full bg-violet-600 text-white font-medium shadow-md transition-all';
+            updateProcess(btn.dataset.step);
+        });
+    });
+
+    function updateProcess(step) {
+        const d = processSteps[step];
+        const el = document.getElementById('process-display');
+        el.style.opacity = 0;
+        setTimeout(() => {
+            el.innerHTML = `
+                <div class="mb-6 p-4 rounded-full ${d.bg} ${d.color} text-3xl"><i class="fas ${d.icon}"></i></div>
+                <h3 class="text-2xl font-bold dark:text-white mb-4">${d.title}</h3>
+                <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">${d.text}</p>
             `;
-        }
+            el.style.opacity = 1;
+        }, 200);
+    }
 
-        document.querySelectorAll('.process-step').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.process-step').forEach(b => b.classList.replace('bg-violet-600', 'bg-white'));
-                document.querySelectorAll('.process-step').forEach(b => b.classList.add('text-slate-600', 'border'));
-                btn.className = 'process-step px-6 py-3 rounded-full bg-violet-600 text-white font-medium shadow-md transition-all';
-                updateProcess(btn.dataset.step);
-            });
-        });
+    document.getElementById('demo-trigger').addEventListener('click', () => {
+        const btn = document.getElementById('demo-trigger');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
+        setTimeout(() => {
+            document.getElementById('ai-status-container').classList.add('hidden');
+            document.getElementById('ai-results').classList.remove('hidden');
+            btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
+        }, 3000);
+    });
 
-        function updateProcess(step) {
-            const d = processSteps[step];
-            const el = document.getElementById('process-display');
-            el.style.opacity = 0;
-            setTimeout(() => {
-                el.innerHTML = `
-                    <div class="mb-6 p-4 rounded-full ${d.bg} ${d.color} text-3xl"><i class="fas ${d.icon}"></i></div>
-                    <h3 class="text-2xl font-bold dark:text-white mb-4">${d.title}</h3>
-                    <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">${d.text}</p>
-                `;
-                el.style.opacity = 1;
-            }, 200);
-        }
+    document.getElementById('reset-demo').addEventListener('click', () => {
+        document.getElementById('ai-results').classList.add('hidden');
+        document.getElementById('ai-status-container').classList.remove('hidden');
+    });
 
-        document.getElementById('demo-trigger').addEventListener('click', () => {
-            const btn = document.getElementById('demo-trigger');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
-            setTimeout(() => {
-                document.getElementById('ai-status-container').classList.add('hidden');
-                document.getElementById('ai-results').classList.remove('hidden');
-                btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
-            }, 3000);
-        });
+    function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        document.getElementById('reset-demo').addEventListener('click', () => {
-            document.getElementById('ai-results').classList.add('hidden');
-            document.getElementById('ai-status-container').classList.remove('hidden');
-        });
-
-        function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
-
-        window.onload = () => {
-            initCharts();
-            loadFeature('analysis');
-            updateProcess(1);
-            updateCounters();
-        };
-    </script>
+    window.onload = () => {
+        initCharts();
+        loadFeature('analysis');
+        updateProcess(1);
+        updateCounters();
+    };
+</script>
 </body>
 </html>
+
