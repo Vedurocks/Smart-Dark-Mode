@@ -210,15 +210,8 @@
                         <div id="ai-results" class="hidden absolute inset-0 bg-slate-800 p-6 flex-col justify-between text-left">
                             <div>
                                 <h4 class="text-violet-400 font-bold uppercase text-xs tracking-wider mb-2">Analysis Complete</h4>
-                                <div class="space-y-3">
-                                    <div class="flex justify-between items-center text-sm">
-                                        <span class="text-white">Contrast Score</span>
-                                        <span class="text-green-400 font-mono">98%</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-sm">
-                                        <span class="text-white">Layout Integrity</span>
-                                        <span class="text-blue-400 font-mono">Safe</span>
-                                    </div>
+                                <div class="space-y-3" id="ai-metrics-container">
+                                    <!-- Will be populated by JS -->
                                 </div>
                             </div>
                             <button id="reset-demo" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded text-sm transition">Reset Simulation</button>
@@ -346,7 +339,7 @@
                         <span class="font-medium">Views: </span>
                         <span id="viewCount" class="font-bold text-slate-800">1,248</span>
                     </div>
-                    <!-- WORKING LIKE BUTTON - NOW WITH REAL FUNCTIONALITY -->
+                    <!-- WORKING LIKE BUTTON -->
                     <div class="flex items-center space-x-2">
                         <button id="likeButton" class="flex items-center space-x-2 px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-red-400 dark:hover:border-red-400 transition-all shadow-sm like-heart">
                             <i id="heartIcon" class="fas fa-heart text-slate-400 dark:text-slate-500"></i>
@@ -368,6 +361,13 @@
             }
         })();
 
+        // ---------- GITHUB OAUTH CONFIGURATION - YOUR CLIENT ID IS NOW HERE! ----------
+        const GITHUB_CONFIG = {
+            clientId: 'Ov23li36o1tSq1pDpUXB', // ✅ YOUR GITHUB CLIENT ID - READY TO USE!
+            redirectUri: window.location.origin + window.location.pathname,
+            scope: 'user:email'
+        };
+
         // ---------- GLOBAL VARIABLES ----------
         let viewCount = 1248;
         let likeCount = 89;
@@ -388,65 +388,125 @@
             4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
         };
 
+        // ---------- AI DEMO WITH RANDOM SCORES 90-100 ----------
+        function setupAIDemo() {
+            document.getElementById('demo-trigger').addEventListener('click', () => {
+                const btn = document.getElementById('demo-trigger');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
+                
+                setTimeout(() => {
+                    // Generate random scores between 90-100
+                    const contrastScore = Math.floor(Math.random() * 11) + 90;
+                    const layoutScore = Math.floor(Math.random() * 11) + 90;
+                    const readabilityScore = Math.floor(Math.random() * 11) + 90;
+                    const brandIntegrity = Math.floor(Math.random() * 11) + 90;
+                    
+                    // Status messages based on scores
+                    const getStatus = (score) => {
+                        if (score >= 98) return 'Perfect';
+                        if (score >= 95) return 'Excellent';
+                        if (score >= 92) return 'Good';
+                        return 'Safe';
+                    };
+                    
+                    const getColor = (score) => {
+                        if (score >= 95) return 'text-green-400';
+                        if (score >= 90) return 'text-blue-400';
+                        return 'text-yellow-400';
+                    };
+                    
+                    // Update UI with random values
+                    const metricsContainer = document.getElementById('ai-metrics-container');
+                    
+                    metricsContainer.innerHTML = `
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-white">Contrast Score</span>
+                            <span class="${getColor(contrastScore)} font-mono">${contrastScore}%</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-white">Layout Integrity</span>
+                            <span class="${getColor(layoutScore)} font-mono">${getStatus(layoutScore)}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-white">Readability</span>
+                            <span class="${getColor(readabilityScore)} font-mono">${readabilityScore}%</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-white">Brand Protection</span>
+                            <span class="${getColor(brandIntegrity)} font-mono">${brandIntegrity}%</span>
+                        </div>
+                    `;
+                    
+                    // Random analysis time message
+                    const analysisTime = (Math.random() * 3 + 1.5).toFixed(1);
+                    document.querySelector('#ai-results h4').innerHTML = `Analysis Complete • ${analysisTime}s`;
+                    
+                    document.getElementById('ai-status-container').classList.add('hidden');
+                    document.getElementById('ai-results').classList.remove('hidden');
+                    btn.innerHTML = '<i class="fas fa-play mr-2"></i> Run New Analysis';
+                    
+                    console.log(`🎯 AI Analysis - Contrast: ${contrastScore}%, Layout: ${getStatus(layoutScore)}, Time: ${analysisTime}s`);
+                    
+                }, 2000);
+            });
+            
+            document.getElementById('reset-demo').addEventListener('click', () => {
+                document.getElementById('ai-results').classList.add('hidden');
+                document.getElementById('ai-status-container').classList.remove('hidden');
+                
+                // Reset the button text
+                const btn = document.getElementById('demo-trigger');
+                btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
+            });
+        }
+
         // ---------- WORKING LIKE SYSTEM ----------
         function initLikeSystem() {
             const likeButton = document.getElementById('likeButton');
             const heartIcon = document.getElementById('heartIcon');
             const likeCountEl = document.getElementById('likeCount');
             
-            // Check if user already liked this page (stored in localStorage)
             hasLiked = localStorage.getItem('vedurocks_liked') === 'true';
             
-            // Load like count from localStorage
             const savedLikes = localStorage.getItem('vedurocks_likes');
             if (savedLikes) {
                 likeCount = parseInt(savedLikes);
                 likeCountEl.textContent = likeCount;
             }
             
-            // Update UI based on like status
             if (hasLiked) {
                 heartIcon.classList.remove('text-slate-400', 'dark:text-slate-500');
                 heartIcon.classList.add('text-red-500');
                 likeButton.classList.add('active');
             }
             
-            // Add click handler
             likeButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 
                 if (!hasLiked) {
-                    // Add like
                     likeCount++;
                     hasLiked = true;
                     
-                    // Save to localStorage
                     localStorage.setItem('vedurocks_likes', likeCount);
                     localStorage.setItem('vedurocks_liked', 'true');
                     
-                    // Update UI
                     likeCountEl.textContent = likeCount;
                     heartIcon.classList.remove('text-slate-400', 'dark:text-slate-500');
                     heartIcon.classList.add('text-red-500');
                     likeButton.classList.add('active');
                     
-                    // Add animation
                     heartIcon.classList.add('heart-pop');
                     setTimeout(() => heartIcon.classList.remove('heart-pop'), 300);
                     
-                    // Show success message
                     showToast('❤️ Thanks for liking Vedurocks!');
                     
                 } else {
-                    // Remove like
                     likeCount--;
                     hasLiked = false;
                     
-                    // Save to localStorage
                     localStorage.setItem('vedurocks_likes', likeCount);
                     localStorage.setItem('vedurocks_liked', 'false');
                     
-                    // Update UI
                     likeCountEl.textContent = likeCount;
                     heartIcon.classList.add('text-slate-400', 'dark:text-slate-500');
                     heartIcon.classList.remove('text-red-500');
@@ -459,17 +519,14 @@
 
         // Toast notification
         function showToast(message) {
-            // Remove existing toast
             const existingToast = document.querySelector('.toast-notification');
             if (existingToast) existingToast.remove();
             
-            // Create toast
             const toast = document.createElement('div');
             toast.className = 'toast-notification fixed bottom-4 right-4 bg-slate-900 dark:bg-slate-700 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-up';
             toast.textContent = message;
             document.body.appendChild(toast);
             
-            // Remove after 2 seconds
             setTimeout(() => {
                 toast.classList.add('animate-fade-out-down');
                 setTimeout(() => toast.remove(), 300);
@@ -498,7 +555,6 @@
 
         // ---------- VIEW COUNTER WITH PERSISTENCE ----------
         function initViewCounter() {
-            // Increment view count on each page load
             const today = new Date().toDateString();
             const lastVisit = localStorage.getItem('vedurocks_last_visit');
             
@@ -514,26 +570,19 @@
             document.getElementById('viewCount').textContent = viewCount;
         }
 
-        // ---------- GITHUB AUTHENTICATION (Simplified for demo) ----------
+        // ---------- GITHUB AUTHENTICATION ----------
         function setupGithubAuth() {
             const authBtn = document.getElementById('authTriggerBtn');
             
             authBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 
-                // Toggle between logged in/out states for demo
                 const currentUser = localStorage.getItem('github_user');
                 
                 if (!currentUser) {
-                    // Simulate login
-                    const mockUser = {
-                        name: 'Vedansh Jain',
-                        login: 'vedansh-jain',
-                        avatar_url: 'https://avatars.githubusercontent.com/u/583231?v=4'
-                    };
-                    localStorage.setItem('github_user', JSON.stringify(mockUser));
-                    updateUIWithGitHubUser(mockUser);
-                    showToast('✅ Logged in with GitHub!');
+                    // Redirect to GitHub OAuth
+                    const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CONFIG.clientId}&redirect_uri=${encodeURIComponent(GITHUB_CONFIG.redirectUri)}&scope=${GITHUB_CONFIG.scope}`;
+                    window.location.href = authUrl;
                 } else {
                     // Logout
                     localStorage.removeItem('github_user');
@@ -542,7 +591,6 @@
                 }
             });
             
-            // Check for existing login
             const savedUser = localStorage.getItem('github_user');
             if (savedUser) {
                 updateUIWithGitHubUser(JSON.parse(savedUser));
@@ -552,8 +600,8 @@
         function updateUIWithGitHubUser(user) {
             const authBtn = document.getElementById('authTriggerBtn');
             authBtn.innerHTML = `
-                <img src="${user.avatar_url}" class="w-6 h-6 rounded-full" alt="avatar">
-                <span>${user.name || user.login}</span>
+                <img src="${user.avatar_url || 'https://avatars.githubusercontent.com/u/583231?v=4'}" class="w-6 h-6 rounded-full" alt="avatar">
+                <span>${user.name || user.login || 'GitHub User'}</span>
             `;
             authBtn.classList.remove('bg-violet-100', 'dark:bg-violet-900/30', 'text-violet-700', 'dark:text-violet-300');
             authBtn.classList.add('bg-slate-900', 'text-white', 'border-slate-800', 'hover:bg-slate-800');
@@ -578,16 +626,11 @@
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             
-            // Don't open modal, just use GitHub auth directly
-            modal.classList.add('hidden');
-            
-            // Close modal
             closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) modal.classList.add('hidden');
             });
             
-            // Tab switching
             loginTab.addEventListener('click', () => {
                 loginTab.classList.add('text-violet-600', 'border-violet-600');
                 loginTab.classList.remove('text-slate-500', 'border-transparent');
@@ -606,7 +649,6 @@
                 loginForm.classList.add('hidden');
             });
             
-            // Demo login buttons
             document.getElementById('demoLoginBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 const mockUser = {
@@ -758,78 +800,6 @@
             }, 200);
         }
 
-// AI DEMO WITH RANDOM SCORES, STATUS, AND METRICS ----------
-function setupAIDemo() {
-    document.getElementById('demo-trigger').addEventListener('click', () => {
-        const btn = document.getElementById('demo-trigger');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
-        
-        setTimeout(() => {
-            // Random scores between 90-100
-            const contrastScore = Math.floor(Math.random() * 11) + 90;
-            const layoutScore = Math.floor(Math.random() * 11) + 90;
-            const readabilityScore = Math.floor(Math.random() * 11) + 90;
-            const brandIntegrity = Math.floor(Math.random() * 11) + 90;
-            
-            // Status messages based on scores
-            const getStatus = (score) => {
-                if (score >= 98) return 'Perfect';
-                if (score >= 95) return 'Excellent';
-                if (score >= 92) return 'Good';
-                return 'Safe';
-            };
-            
-            const getColor = (score) => {
-                if (score >= 95) return 'text-green-400';
-                if (score >= 90) return 'text-blue-400';
-                return 'text-yellow-400';
-            };
-            
-            // Update UI with random values
-            const resultsDiv = document.getElementById('ai-results');
-            const spaceDiv = resultsDiv.querySelector('.space-y-3');
-            
-            // Create or update metrics
-            spaceDiv.innerHTML = `
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-white">Contrast Score</span>
-                    <span class="${getColor(contrastScore)} font-mono">${contrastScore}%</span>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-white">Layout Integrity</span>
-                    <span class="${getColor(layoutScore)} font-mono">${getStatus(layoutScore)}</span>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-white">Readability</span>
-                    <span class="${getColor(readabilityScore)} font-mono">${readabilityScore}%</span>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-white">Brand Protection</span>
-                    <span class="${getColor(brandIntegrity)} font-mono">${brandIntegrity}%</span>
-                </div>
-            `;
-            
-            // Random analysis time message
-            const analysisTime = (Math.random() * 3 + 1.5).toFixed(1);
-            resultsDiv.querySelector('h4').innerHTML = `Analysis Complete • ${analysisTime}s`;
-            
-            document.getElementById('ai-status-container').classList.add('hidden');
-            resultsDiv.classList.remove('hidden');
-            btn.innerHTML = '<i class="fas fa-play mr-2"></i> Run New Analysis';
-            
-        }, 2000);
-    });
-    
-    document.getElementById('reset-demo').addEventListener('click', () => {
-        document.getElementById('ai-results').classList.add('hidden');
-        document.getElementById('ai-status-container').classList.remove('hidden');
-        
-        // Reset the button text
-        const btn = document.getElementById('demo-trigger');
-        btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
-    });
-}
-
         // ---------- VIEW/LIKE CONSOLE FUNCTIONS ----------
         window.v = function(value) {
             if (typeof value === 'string') {
@@ -865,7 +835,6 @@ function setupAIDemo() {
             localStorage.setItem('vedurocks_likes', likeCount);
             localStorage.setItem('vedurocks_liked', hasLiked);
             
-            // Update UI
             const likeCountEl = document.getElementById('likeCount');
             const heartIcon = document.getElementById('heartIcon');
             const likeButton = document.getElementById('likeButton');
@@ -906,6 +875,7 @@ function setupAIDemo() {
     </script>
 </body>
 </html>
+
 
 
 
