@@ -45,7 +45,6 @@
             100% { transform: scale(1.3); opacity: 0; }
         }
         
-        /* Dark Mode Specific Overrides */
         .dark body { background-color: #0f172a; color: #f1f5f9; }
         .dark .bg-white { background-color: #1e293b !important; }
         .dark .bg-slate-50 { background-color: #0f172a !important; }
@@ -56,21 +55,78 @@
         .dark .text-slate-500 { color: #94a3b8 !important; }
         .dark .border-slate-200 { border-color: #334155 !important; }
         .dark .border-slate-100 { border-color: #1e293b !important; }
+
+        .modal-enter {
+            animation: fadeSlideIn 0.25s ease-out;
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
-    <!-- Chosen Palette: Slate-50/100 (Light) and Midnight Slate (Dark) with Violet-600 AI accents. -->
-    <!-- Application Structure Plan: 
-         The full report structure is maintained: Hero, Feature Grid (4 cards), Data Hub (2 charts), Workflow Visualizer (4 steps), and Roadmap.
-         A theme toggle has been integrated into the navigation bar to demonstrate the "Smart Dark Mode" functionality on the page itself.
-    -->
-    <!-- Visualization & Content Choices:
-         - Doughnut Chart: Site Categorization stats.
-         - Line Chart: AI accuracy trends.
-         - Interactive Steps: Workflow explanation.
-         - Feature Panels: Deep dive into the extension's core tech.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col">
+    <!-- GITHUB AUTH MODAL -->
+    <div id="authModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-700 modal-enter">
+            <div class="p-6 sm:p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
+                        <span class="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center text-white font-bold mr-2">V</span> 
+                        Vedurocks
+                    </h3>
+                    <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl leading-none">&times;</button>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-200 dark:border-slate-700 mb-6">
+                    <button id="loginTabBtn" class="flex-1 py-2 text-center font-semibold text-violet-600 border-b-2 border-violet-600 transition-all">Log In</button>
+                    <button id="registerTabBtn" class="flex-1 py-2 text-center font-semibold text-slate-500 dark:text-slate-400 border-b-2 border-transparent hover:text-slate-700 dark:hover:text-slate-200 transition-all">Register</button>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="loginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                        <input type="email" placeholder="hello@vedurocks.com" class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-600 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                        <input type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-600 focus:border-transparent outline-none transition">
+                    </div>
+                    <button id="demoLoginBtn" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors flex items-center justify-center space-x-2">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Log In to Dashboard</span>
+                    </button>
+                    <p class="text-xs text-center text-slate-500 dark:text-slate-400 mt-4">Demo: demo@vedurocks.com / any password</p>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="registerForm" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full name</label>
+                        <input type="text" placeholder="Vedansh Jain" class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-600 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                        <input type="email" placeholder="hello@vedurocks.com" class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-600 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                        <input type="password" placeholder="Create password" class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-600 focus:border-transparent outline-none transition">
+                    </div>
+                    <button id="demoRegisterBtn" class="w-full bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors flex items-center justify-center space-x-2">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Create free account</span>
+                    </button>
+                </div>
+                
+                <div class="mt-6 text-xs text-slate-400 dark:text-slate-500 text-center border-t border-slate-100 dark:border-slate-700 pt-4">
+                    <i class="fab fa-github mr-1"></i> GitHub authentication ready • Unlimited accounts
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Navigation -->
     <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 transition-colors">
@@ -84,6 +140,13 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <button onclick="scrollToSection('features')" class="hidden md:block text-slate-500 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</button>
+                    
+                    <!-- GitHub Auth Button -->
+                    <button id="authTriggerBtn" class="flex items-center space-x-2 bg-violet-100 dark:bg-violet-900/30 border border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 px-4 py-2 rounded-full text-sm font-bold hover:bg-violet-600 hover:text-white hover:border-violet-600 transition-all shadow-sm">
+                        <i class="fab fa-github"></i>
+                        <span>Sign in with GitHub</span>
+                    </button>
+
                     <button id="theme-toggle" class="flex items-center space-x-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-full text-sm font-bold hover:bg-violet-600 hover:text-white hover:border-violet-600 transition-all shadow-sm">
                         <i id="theme-icon" class="fas fa-moon"></i>
                         <span id="theme-text">Enable Dark Mode</span>
@@ -94,7 +157,6 @@
     </nav>
 
     <main class="flex-grow">
-        
         <!-- Hero Section -->
         <div class="bg-white border-b border-slate-200">
             <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
@@ -148,7 +210,7 @@
             </div>
         </div>
 
-        <!-- Section 2: Features Grid -->
+        <!-- Features Section -->
         <div id="features" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-base text-violet-600 font-semibold tracking-wide uppercase">Core Capabilities</h2>
@@ -204,7 +266,7 @@
             </div>
         </div>
 
-        <!-- Section 3: Data Visualization -->
+        <!-- Charts Section -->
         <div class="bg-slate-100 py-16 transition-colors">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -224,7 +286,7 @@
             </div>
         </div>
 
-        <!-- Section 4: Workflow -->
+        <!-- Workflow Section -->
         <div id="workflow" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-slate-900 text-center mb-12">The "Thinking" Process</h2>
             <div class="flex flex-wrap justify-center gap-4 mb-8">
@@ -233,12 +295,10 @@
                 <button class="process-step px-6 py-3 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-step="3">3. Execution</button>
                 <button class="process-step px-6 py-3 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-step="4">4. Persistence</button>
             </div>
-            <div id="process-display" class="bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center min-h-[250px] flex flex-col items-center justify-center transition-opacity duration-300">
-                <!-- Content injected via JS -->
-            </div>
+            <div id="process-display" class="bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center min-h-[250px] flex flex-col items-center justify-center transition-opacity duration-300"></div>
         </div>
 
-        <!-- Section 5: Roadmap -->
+        <!-- Roadmap Section -->
         <div id="roadmap" class="bg-slate-900 text-white py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h3 class="text-3xl font-extrabold text-center mb-12">Roadmap: AI-Native Engine</h3>
@@ -254,7 +314,6 @@
                 </div>
             </div>
         </div>
-
     </main>
 
     <footer class="bg-white border-t border-slate-200 py-8">
@@ -280,213 +339,363 @@
     </footer>
 
     <script>
-    // Data Store
-    const featureContent = {
-        analysis: { title: "AI-Powered Site Analysis", icon: "fa-search-dollar", color: "text-violet-600", bg: "bg-violet-100", desc: "Runs for 8–20 seconds, scanning the DOM for variables and layout structures without blocking your interaction.", stat: "8-20s" },
-        state: { title: "Smart State Management", icon: "fa-toggle-on", color: "text-blue-600", bg: "bg-blue-100", desc: "Set a site to 'Always Dark' or 'Never Dark'. The extension queries the local database instantly upon URL detection.", stat: "100%" },
-        surgical: { title: "Surgical Element Removal", icon: "fa-eraser", color: "text-pink-600", bg: "bg-pink-100", desc: "Manually remove elements that disrupt the experience. The extension remembers these removals for future visits.", stat: "Custom" },
-        memory: { title: "Behavioral Memory", icon: "fa-brain", color: "text-amber-600", bg: "bg-amber-100", desc: "Tracks your manual adjustments to build a custom preference profile automatically.", stat: "AI" }
-    };
-
-    const processSteps = {
-        1: { title: "Step 1: Detection", icon: "fa-radar", text: "Identifies the site and checks for existing user preferences in milliseconds.", color: "text-violet-600", bg: "bg-violet-100" },
-        2: { title: "Step 2: Analysis", icon: "fa-microchip", text: "New sites trigger an AI scan for colors and contrast ratios.", color: "text-blue-600", bg: "bg-blue-100" },
-        3: { title: "Step 3: Execution", icon: "fa-paint-roller", text: "Applies intelligent inversion or custom styles based on the analysis.", color: "text-pink-600", bg: "bg-pink-100" },
-        4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
-    };
-
-    // View and Like Counter System
-    let viewCount = 1248;
-    let likeCount = 89;
-
-    function updateCounters() {
-        document.getElementById('viewCount').textContent = formatNumber(viewCount);
-        document.getElementById('likeCount').textContent = formatNumber(likeCount);
-    }
-
-    function formatNumber(num) {
-        return num.toLocaleString('en-US');
-    }
-
-    // Console Functions with correct logic
-    window.v = function(value) {
-        if (typeof value === 'string') {
-            if (value.startsWith('+')) {
-                // Add views
-                const increment = parseInt(value.substring(1));
-                viewCount += increment;
-            } else if (value.startsWith('-')) {
-                // Subtract views
-                const decrement = parseInt(value.substring(1));
-                viewCount -= decrement;
-            } else {
-                // Set to absolute value (e.g., "v(500)" sets to 500)
-                viewCount = parseInt(value);
+        // ---------- DEVICE-AWARE DARK MODE ----------
+        (function setInitialTheme() {
+            if (localStorage.getItem('theme') === 'dark' || 
+                (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
             }
-        } else if (!isNaN(value)) {
-            // If it's a number (not a string), set absolute value
-            viewCount = parseInt(value);
+        })();
+
+        // ---------- GITHUB OAUTH CONFIGURATION ----------
+        const GITHUB_CONFIG = {
+            clientId: 'YOUR_GITHUB_OAUTH_APP_CLIENT_ID', // REPLACE WITH YOUR CLIENT ID
+            redirectUri: window.location.origin + window.location.pathname,
+            scope: 'user:email'
+        };
+
+        // ---------- GLOBAL VARIABLES ----------
+        let viewCount = 1248;
+        let likeCount = 89;
+        let charts = {};
+
+        const featureContent = {
+            analysis: { title: "AI-Powered Site Analysis", icon: "fa-search-dollar", color: "text-violet-600", bg: "bg-violet-100", desc: "Runs for 8–20 seconds, scanning the DOM for variables and layout structures without blocking your interaction.", stat: "8-20s" },
+            state: { title: "Smart State Management", icon: "fa-toggle-on", color: "text-blue-600", bg: "bg-blue-100", desc: "Set a site to 'Always Dark' or 'Never Dark'. The extension queries the local database instantly upon URL detection.", stat: "100%" },
+            surgical: { title: "Surgical Element Removal", icon: "fa-eraser", color: "text-pink-600", bg: "bg-pink-100", desc: "Manually remove elements that disrupt the experience. The extension remembers these removals for future visits.", stat: "Custom" },
+            memory: { title: "Behavioral Memory", icon: "fa-brain", color: "text-amber-600", bg: "bg-amber-100", desc: "Tracks your manual adjustments to build a custom preference profile automatically.", stat: "AI" }
+        };
+
+        const processSteps = {
+            1: { title: "Step 1: Detection", icon: "fa-radar", text: "Identifies the site and checks for existing user preferences in milliseconds.", color: "text-violet-600", bg: "bg-violet-100" },
+            2: { title: "Step 2: Analysis", icon: "fa-microchip", text: "New sites trigger an AI scan for colors and contrast ratios.", color: "text-blue-600", bg: "bg-blue-100" },
+            3: { title: "Step 3: Execution", icon: "fa-paint-roller", text: "Applies intelligent inversion or custom styles based on the analysis.", color: "text-pink-600", bg: "bg-pink-100" },
+            4: { title: "Step 4: Persistence", icon: "fa-save", text: "Stores your preferences and manual tweaks for the next visit.", color: "text-amber-600", bg: "bg-amber-100" }
+        };
+
+        // ---------- GITHUB AUTHENTICATION ----------
+        function initGitHubAuth() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+                handleGitHubCallback(code);
+            }
+            
+            const githubUser = localStorage.getItem('github_user');
+            if (githubUser) {
+                updateUIWithGitHubUser(JSON.parse(githubUser));
+            }
         }
-        viewCount = Math.max(0, viewCount);
-        updateCounters();
-        return `Views updated to: ${viewCount}`;
-    };
 
-    window.l = function(value) {
-        if (typeof value === 'string') {
-            if (value.startsWith('+')) {
-                // Add likes
-                const increment = parseInt(value.substring(1));
-                likeCount += increment;
-            } else if (value.startsWith('-')) {
-                // Subtract likes
-                const decrement = parseInt(value.substring(1));
-                likeCount -= decrement;
-            } else {
-                // Set to absolute value (e.g., "l(100)" sets to 100)
-                likeCount = parseInt(value);
-            }
-        } else if (!isNaN(value)) {
-            // If it's a number (not a string), set absolute value
-            likeCount = parseInt(value);
+        function redirectToGitHub() {
+            const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CONFIG.clientId}&redirect_uri=${encodeURIComponent(GITHUB_CONFIG.redirectUri)}&scope=${GITHUB_CONFIG.scope}`;
+            window.location.href = authUrl;
         }
-        likeCount = Math.max(0, likeCount);
-        updateCounters();
-        return `Likes updated to: ${likeCount}`;
-    };
 
-    // Theme Toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeText = document.getElementById('theme-text');
-    
-    themeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark');
-        themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        themeText.innerText = isDark ? 'Switch to Light Mode' : 'Enable Dark Mode';
-        updateCharts(isDark);
-    });
+        function handleGitHubCallback(code) {
+            // For demo/development - simulate successful login
+            simulateGitHubLogin(code);
+            
+            /* PRODUCTION: Use this with a backend
+            fetch('https://your-backend.com/github-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            })
+            .then(res => res.json())
+            .then(data => fetchGitHubUserData(data.access_token));
+            */
+        }
 
-    // Charts
-    let charts = {};
-    function initCharts() {
-        const ctx1 = document.getElementById('categoryChart').getContext('2d');
-        charts.cat = new Chart(ctx1, {
-            type: 'doughnut',
-            data: {
-                labels: ['Optimized', 'Never Dark', 'Manual', 'Standard'],
-                datasets: [{
-                    data: [45, 15, 25, 15],
-                    backgroundColor: ['#8b5cf6', '#ef4444', '#f59e0b', '#cbd5e1'],
-                    borderWidth: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        function simulateGitHubLogin(code) {
+            // Create a unique user based on the code (for demo)
+            const mockGitHubUser = {
+                id: Date.now(),
+                login: `github-user-${code.slice(-4)}`,
+                name: 'Vedansh Jain',
+                email: 'vedansh@github.com',
+                avatar_url: 'https://avatars.githubusercontent.com/u/583231?v=4',
+                html_url: 'https://github.com/vedansh-jain',
+                created_at: new Date().toISOString()
+            };
+            
+            localStorage.setItem('github_user', JSON.stringify(mockGitHubUser));
+            updateUIWithGitHubUser(mockGitHubUser);
+            alert('✅ Successfully logged in with GitHub!');
+            document.getElementById('authModal').classList.add('hidden');
+        }
 
-        const ctx2 = document.getElementById('learningChart').getContext('2d');
-        charts.learn = new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
-                datasets: [{
-                    label: 'Accuracy',
-                    data: [60, 68, 75, 82, 88, 94],
-                    borderColor: '#8b5cf6',
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
-
-    function updateCharts(isDark) {
-        const color = isDark ? '#f8fafc' : '#1e293b';
-        const grid = isDark ? '#334155' : '#f1f5f9';
-        [charts.cat, charts.learn].forEach(c => {
-            if(c.options.scales) {
-                if(c.options.scales.x) c.options.scales.x.ticks.color = color;
-                if(c.options.scales.y) {
-                    c.options.scales.y.ticks.color = color;
-                    c.options.scales.y.grid.color = grid;
-                }
-            }
-            c.update();
-        });
-    }
-
-    // Interactivity
-    document.querySelectorAll('.feature-card').forEach(card => {
-        card.addEventListener('click', () => loadFeature(card.dataset.feature));
-    });
-
-    function loadFeature(key) {
-        const d = featureContent[key];
-        document.getElementById('detail-content').innerHTML = `
-            <div class="animate-fade-in text-center md:text-left">
-                <div class="flex items-center justify-center md:justify-start mb-4">
-                    <div class="p-3 rounded-full ${d.bg} ${d.color} mr-4"><i class="fas ${d.icon} text-2xl"></i></div>
-                    <h3 class="text-2xl font-bold dark:text-white">${d.title}</h3>
-                </div>
-                <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">${d.desc}</p>
-                <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg flex justify-between border dark:border-slate-700">
-                    <span class="text-xs font-bold uppercase text-slate-400">Target</span>
-                    <span class="text-2xl font-bold ${d.color}">${d.stat}</span>
-                </div>
-            </div>
-        `;
-    }
-
-    document.querySelectorAll('.process-step').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.process-step').forEach(b => b.classList.replace('bg-violet-600', 'bg-white'));
-            document.querySelectorAll('.process-step').forEach(b => b.classList.add('text-slate-600', 'border'));
-            btn.className = 'process-step px-6 py-3 rounded-full bg-violet-600 text-white font-medium shadow-md transition-all';
-            updateProcess(btn.dataset.step);
-        });
-    });
-
-    function updateProcess(step) {
-        const d = processSteps[step];
-        const el = document.getElementById('process-display');
-        el.style.opacity = 0;
-        setTimeout(() => {
-            el.innerHTML = `
-                <div class="mb-6 p-4 rounded-full ${d.bg} ${d.color} text-3xl"><i class="fas ${d.icon}"></i></div>
-                <h3 class="text-2xl font-bold dark:text-white mb-4">${d.title}</h3>
-                <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">${d.text}</p>
+        function updateUIWithGitHubUser(user) {
+            const authBtn = document.getElementById('authTriggerBtn');
+            
+            authBtn.innerHTML = `
+                <img src="${user.avatar_url}" class="w-6 h-6 rounded-full" alt="avatar">
+                <span>${user.name || user.login}</span>
             `;
-            el.style.opacity = 1;
-        }, 200);
-    }
+            authBtn.classList.remove('bg-violet-100', 'dark:bg-violet-900/30', 'text-violet-700', 'dark:text-violet-300');
+            authBtn.classList.add('bg-slate-900', 'text-white', 'border-slate-800', 'hover:bg-slate-800');
+            
+            authBtn.onclick = (e) => {
+                e.preventDefault();
+                if (confirm(`Logout ${user.name}?`)) {
+                    localStorage.removeItem('github_user');
+                    window.location.reload();
+                }
+            };
+        }
 
-    document.getElementById('demo-trigger').addEventListener('click', () => {
-        const btn = document.getElementById('demo-trigger');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
-        setTimeout(() => {
-            document.getElementById('ai-status-container').classList.add('hidden');
-            document.getElementById('ai-results').classList.remove('hidden');
-            btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
-        }, 3000);
-    });
+        // ---------- MODAL CONTROLS ----------
+        function setupModal() {
+            const modal = document.getElementById('authModal');
+            const authBtn = document.getElementById('authTriggerBtn');
+            const closeBtn = document.getElementById('closeModalBtn');
+            const loginTab = document.getElementById('loginTabBtn');
+            const registerTab = document.getElementById('registerTabBtn');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            // Open modal (only if not logged in)
+            authBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!localStorage.getItem('github_user')) {
+                    // Replace with GitHub OAuth directly
+                    redirectToGitHub();
+                }
+            });
+            
+            // Close modal
+            closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.add('hidden');
+            });
+            
+            // Tab switching
+            loginTab.addEventListener('click', () => {
+                loginTab.classList.add('text-violet-600', 'border-violet-600');
+                loginTab.classList.remove('text-slate-500', 'border-transparent');
+                registerTab.classList.remove('text-violet-600', 'border-violet-600');
+                registerTab.classList.add('text-slate-500', 'border-transparent');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            });
+            
+            registerTab.addEventListener('click', () => {
+                registerTab.classList.add('text-violet-600', 'border-violet-600');
+                registerTab.classList.remove('text-slate-500', 'border-transparent');
+                loginTab.classList.remove('text-violet-600', 'border-violet-600');
+                loginTab.classList.add('text-slate-500', 'border-transparent');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            });
+            
+            // Demo login buttons
+            document.getElementById('demoLoginBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                simulateGitHubLogin('demo123');
+            });
+            
+            document.getElementById('demoRegisterBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                simulateGitHubLogin('newuser456');
+            });
+        }
 
-    document.getElementById('reset-demo').addEventListener('click', () => {
-        document.getElementById('ai-results').classList.add('hidden');
-        document.getElementById('ai-status-container').classList.remove('hidden');
-    });
+        // ---------- THEME TOGGLE ----------
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            function setThemeUI(isDark) {
+                themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+                themeText.innerText = isDark ? 'Switch to Light Mode' : 'Enable Dark Mode';
+            }
+            
+            setThemeUI(document.documentElement.classList.contains('dark'));
+            
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                setThemeUI(isDark);
+                updateCharts(isDark);
+            });
+        }
 
-    function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+        // ---------- CHARTS ----------
+        function initCharts() {
+            const ctx1 = document.getElementById('categoryChart').getContext('2d');
+            charts.cat = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Optimized', 'Never Dark', 'Manual', 'Standard'],
+                    datasets: [{
+                        data: [45, 15, 25, 15],
+                        backgroundColor: ['#8b5cf6', '#ef4444', '#f59e0b', '#cbd5e1'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
 
-    window.onload = () => {
-        initCharts();
-        loadFeature('analysis');
-        updateProcess(1);
-        updateCounters();
-    };
-</script>
+            const ctx2 = document.getElementById('learningChart').getContext('2d');
+            charts.learn = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
+                    datasets: [{
+                        label: 'Accuracy',
+                        data: [60, 68, 75, 82, 88, 94],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+            
+            updateCharts(document.documentElement.classList.contains('dark'));
+        }
+
+        function updateCharts(isDark) {
+            const color = isDark ? '#f8fafc' : '#1e293b';
+            const grid = isDark ? '#334155' : '#f1f5f9';
+            [charts.cat, charts.learn].forEach(c => {
+                if (c && c.options.scales) {
+                    if (c.options.scales.x) c.options.scales.x.ticks.color = color;
+                    if (c.options.scales.y) {
+                        c.options.scales.y.ticks.color = color;
+                        c.options.scales.y.grid.color = grid;
+                    }
+                    c.update();
+                }
+            });
+        }
+
+        // ---------- FEATURE CARDS ----------
+        function setupFeatureCards() {
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('click', () => loadFeature(card.dataset.feature));
+            });
+        }
+
+        function loadFeature(key) {
+            const d = featureContent[key];
+            document.getElementById('detail-content').innerHTML = `
+                <div class="animate-fade-in text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start mb-4">
+                        <div class="p-3 rounded-full ${d.bg} ${d.color} mr-4"><i class="fas ${d.icon} text-2xl"></i></div>
+                        <h3 class="text-2xl font-bold dark:text-white">${d.title}</h3>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">${d.desc}</p>
+                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg flex justify-between border dark:border-slate-700">
+                        <span class="text-xs font-bold uppercase text-slate-400">Target</span>
+                        <span class="text-2xl font-bold ${d.color}">${d.stat}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ---------- PROCESS STEPS ----------
+        function setupProcessSteps() {
+            document.querySelectorAll('.process-step').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.process-step').forEach(b => {
+                        b.classList.replace('bg-violet-600', 'bg-white');
+                        b.classList.add('text-slate-600', 'border');
+                    });
+                    btn.className = 'process-step px-6 py-3 rounded-full bg-violet-600 text-white font-medium shadow-md transition-all';
+                    updateProcess(btn.dataset.step);
+                });
+            });
+        }
+
+        function updateProcess(step) {
+            const d = processSteps[step];
+            const el = document.getElementById('process-display');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerHTML = `
+                    <div class="mb-6 p-4 rounded-full ${d.bg} ${d.color} text-3xl"><i class="fas ${d.icon}"></i></div>
+                    <h3 class="text-2xl font-bold dark:text-white mb-4">${d.title}</h3>
+                    <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">${d.text}</p>
+                `;
+                el.style.opacity = 1;
+            }, 200);
+        }
+
+        // ---------- AI DEMO ----------
+        function setupAIDemo() {
+            document.getElementById('demo-trigger').addEventListener('click', () => {
+                const btn = document.getElementById('demo-trigger');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
+                setTimeout(() => {
+                    document.getElementById('ai-status-container').classList.add('hidden');
+                    document.getElementById('ai-results').classList.remove('hidden');
+                    btn.innerHTML = '<i class="fas fa-play mr-2"></i> Simulate AI Analysis';
+                }, 3000);
+            });
+            
+            document.getElementById('reset-demo').addEventListener('click', () => {
+                document.getElementById('ai-results').classList.add('hidden');
+                document.getElementById('ai-status-container').classList.remove('hidden');
+            });
+        }
+
+        // ---------- COUNTERS ----------
+        function updateCounters() {
+            document.getElementById('viewCount').textContent = formatNumber(viewCount);
+            document.getElementById('likeCount').textContent = formatNumber(likeCount);
+        }
+
+        function formatNumber(num) {
+            return num.toLocaleString('en-US');
+        }
+
+        window.v = function(value) {
+            if (typeof value === 'string') {
+                if (value.startsWith('+')) viewCount += parseInt(value.substring(1));
+                else if (value.startsWith('-')) viewCount -= parseInt(value.substring(1));
+                else viewCount = parseInt(value);
+            } else if (!isNaN(value)) viewCount = parseInt(value);
+            viewCount = Math.max(0, viewCount);
+            updateCounters();
+            return `Views updated to: ${viewCount}`;
+        };
+
+        window.l = function(value) {
+            if (typeof value === 'string') {
+                if (value.startsWith('+')) likeCount += parseInt(value.substring(1));
+                else if (value.startsWith('-')) likeCount -= parseInt(value.substring(1));
+                else likeCount = parseInt(value);
+            } else if (!isNaN(value)) likeCount = parseInt(value);
+            likeCount = Math.max(0, likeCount);
+            updateCounters();
+            return `Likes updated to: ${likeCount}`;
+        };
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ---------- INITIALIZE EVERYTHING ----------
+        window.onload = () => {
+            initGitHubAuth();
+            setupModal();
+            setupThemeToggle();
+            initCharts();
+            setupFeatureCards();
+            setupProcessSteps();
+            setupAIDemo();
+            loadFeature('analysis');
+            updateProcess(1);
+            updateCounters();
+        };
+    </script>
 </body>
 </html>
+
 
 
