@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Dark Mode - Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="logo">🌙</div>
+            <h1>Smart Dark Mode</h1>
+            <p class="tagline">AI-Powered Dark Mode Controller</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="auth-form">
+            <h2>Welcome Back</h2>
+            <p class="form-description">Sign in to continue</p>
+
+            <div class="input-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="Enter your email" autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password">
+            </div>
+
+            <div id="login-error" class="error-message hidden"></div>
+
+            <button id="login-btn" class="primary-btn">Login</button>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="auth-form hidden">
+            <h2>Create Account</h2>
+            <p class="form-description">Join us today</p>
+
+            <div class="input-group">
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" placeholder="Enter your email" autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" placeholder="Create a password (min 6 chars)" autocomplete="new-password">
+            </div>
+
+            <div class="input-group">
+                <label for="register-confirm-password">Confirm Password</label>
+                <input type="password" id="register-confirm-password" placeholder="Confirm your password" autocomplete="new-password">
+            </div>
+
+            <div id="register-error" class="error-message hidden"></div>
+            <div id="register-success" class="success-message hidden"></div>
+
+            <button id="register-btn" class="primary-btn">Register</button>
+
+            <div class="form-footer">
+                <p>Already have an account? <a href="#" id="show-login">Login here</a></p>
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            <p>Made by <strong>Vedurocks Ltd</strong></p>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>
